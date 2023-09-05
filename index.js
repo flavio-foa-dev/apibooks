@@ -1,6 +1,14 @@
-import app from './src/app.js';
+import http from 'http';
 
 const port = process.env.PORT || 3000;
+
+const routes = {
+  '/' : 'Curso de api',
+  '/login' : 'Faca o Login',
+  '/books' : 'Livros',
+  '/author' : 'Autores'
+
+};
 
 const livros = [
   {
@@ -19,35 +27,39 @@ function buscaLivro(id) {
   });
 }
 
-app.get('/', (req, res) => {
+http.get('/', (req, res) => {
   res.status(200).send('Curso de Node.js');
 });
 
-app.get('/livros', (req, res) => {
+http.get('/livros', (req, res) => {
   res.status(200).json(livros);
 });
 
-app.get('/livros/:id', (req, res) => {
+http.get('/livros/:id', (req, res) => {
   const index = buscaLivro(req.params.id);
   res.status(200).json(livros[index]);
 });
 
-app.post('/livros', (req, res) => {
+http.post('/livros', (req, res) => {
   livros.push(req.body);
   res.status(201).send('livro cadastrado com sucesso');
 });
 
-app.put('/livros/:id', (req, res) => {
+http.put('/livros/:id', (req, res) => {
   const index = buscaLivro(req.params.id);
   livros[index].titulo = req.body.titulo;
   res.status(200).json(livros);
 });
 
-app.delete('/livros/:id', (req, res) => {
+http.delete('/livros/:id', (req, res) => {
   const index = buscaLivro(req.params.id);
   livros.splice(index, 1);
   res.status(200).send('livro removido com sucesso');
 });
 
+const serve = http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end(routes[req.url]);
+});
 
-app.listen(port, ()=>console.log('listening on port', port));
+serve.listen(port, ()=> console.log('Connected'));
