@@ -1,30 +1,32 @@
+import 'dotenv/config';
 import app from './src/app.js';
-
+import connectiondb from './src/db/config/connect.js';
+import Book from './src/models/book.js';
 const port = process.env.PORT || 3000;
 
-const livros = [
-  {
-    id: 1,
-    titulo: 'O Senhor dos Anéis'
-  },
-  {
-    id: 2,
-    titulo: 'O Hobbit'
-  }
-];
 
-function buscaLivro(id) {
-  return livros.findIndex(livro => {
-    return livro.id === Number(id);
-  });
-}
+
+const connection = await connectiondb();
+
+connection.on('error', (error) => {
+  console.log('Error Conexao',error.message);
+});
+
+connection.once('open', () => {
+  console.log('Conexao feita com o banco de dados');
+});
+
+
+
+
 
 app.get('/', (req, res) => {
   res.status(200).send('Curso de Node.js');
 });
 
-app.get('/livros', (req, res) => {
-  res.status(200).json(livros);
+app.get('/books', async(req, res) => {
+  const books = await Book.find({});
+  res.status(200).json(books);
 });
 
 app.get('/livros/:id', (req, res) => {
