@@ -1,10 +1,7 @@
 import express from 'express';
+import routes from './routes/index.js';
 
 const app = express();
-app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.status(200).send('Flavio Foa API BOOks');
-});
+routes(app);
 
 export default app;
