@@ -1,4 +1,4 @@
-import Author from '../model/author.js';
+import Author from '../models/author.js';
 
 export class AuthorController {
 
@@ -30,7 +30,7 @@ export class AuthorController {
   static async save(req, res) {
     try {
       const author = Author.create(req.body);
-      res.status(201).json({message: 'ceated', book: author});
+      res.status(201).json({message: 'ceated', author: author});
     } catch (error) {
       res
         .status(500)
